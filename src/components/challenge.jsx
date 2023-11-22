@@ -20,6 +20,8 @@ class Challenge extends Component {
     this.state.challengeID = challengeID;
 
     this.spawnChallenge = this.spawnChallenge.bind(this);
+    this.stopChallenge = this.stopChallenge.bind(this);
+    this.restartChallenge = this.restartChallenge.bind(this);
   }
 
   getCookie = (name) => {
@@ -29,9 +31,10 @@ class Challenge extends Component {
   }
 
   spawnChallenge = async () => {
+    console.log((this.state.challengeID).toString());
     try {
       const response = await axios.post('https://ctf.uocybersec.com/spawn-challenge', {
-        challenge_id: this.state.challengeID
+        challenge_id: (this.state.challengeID).toString()
       }, {
         headers: {
           'Authorization': `Bearer ${this.getCookie('token')}`
@@ -43,17 +46,43 @@ class Challenge extends Component {
       this.setState({running: true}); 
     }
     catch (err) {
-      alert('Something went wrong...');
-      console.log(err);
+      alert(err.request.response);
+      console.log(err.request.response);
     }
   }
 
-  stopChallenge = () => {
-    this.setState({running: false});
+  stopChallenge = async () => {
+    try {
+      await axios.post('https://ctf.uocybersec.com/stop-challenge', null, {
+        headers: {
+          'Authorization': `Bearer ${this.getCookie('token')}`
+        }
+      });
+
+      this.setState({address: null});
+      this.setState({running: false}); 
+    }
+    catch (err) {
+      alert(err.request.response);
+      console.log(err.request.response);
+    }
   }
 
-  restartChallenge = () => {
-    alert('Restarting challenge!');
+  restartChallenge = async () => {
+    try {
+      const response = await axios.post('https://ctf.uocybersec.com/restart-challenge', null, {
+        headers: {
+          'Authorization': `Bearer ${this.getCookie('token')}`
+        }
+      });
+
+      const challengeAddress = 'https://' + response.data['instance_port'] + '.uocybersec.com';
+      this.setState({address: challengeAddress});
+    }
+    catch (err) {
+      alert(err.request.response);
+      console.log(err.request.response);
+    }
   }
 
   render() { 
@@ -79,7 +108,7 @@ class Challenge extends Component {
 
               {this.state.running ? <Button onClick={this.restartChallenge}>Restart</Button> : null}
             </div>
-            <Card.Link href={this.state.address}>Access challenge - {this.state.address}</Card.Link>
+            <Card.Link href={this.state.address} target="_blank">{this.state.address}</Card.Link>
 
             {/*<Card.Link href="#">Download required files</Card.Link>
             <Card.Link href="#">Submit flag</Card.Link> {/* redirect them to CTFd */}

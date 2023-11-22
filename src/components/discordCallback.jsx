@@ -6,12 +6,11 @@ class DiscordCallback extends Component {
 
   async componentDidMount() {
     const discordTmpCode = new URLSearchParams(window.location.search).get('code');
-    const response = await axios.post('http://ctf.uocybersec.com/login', {
+    const response = await axios.post('https://ctf.uocybersec.com/login', {
       code: discordTmpCode
     });
     
     if (response.status === 200) {
-      alert(response.data);
       document.cookie = `token=${response.data}`;
       window.location = '/';
     } else {
