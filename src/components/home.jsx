@@ -50,6 +50,7 @@ class Home extends Component {
   render() { 
     return (
       <React.Fragment>
+        <h1>uOCTF Portal</h1>
         {getCookie('token') ? null : <React.Fragment><Login /><br></br></React.Fragment>}
         <div style={{display: 'flex'}}>
           {this.state.challenges}

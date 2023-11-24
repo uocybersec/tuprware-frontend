@@ -2,3 +2,9 @@ body {
     background-color: black !important;
     padding: 25px;
 }
+
+h1 {
+    text-align: center;
+    color: white !important;
+    padding-bottom: 15px;
+}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import axios from 'axios';
+import { ThreeDots } from 'react-loader-spinner';
 import '../styles/challenge.css';
 import {getCookie} from '../utils/cookies';
 import {TUPRWARE_ENDPOINT, CHALLENGES_ENDPOINT} from '../utils/endpoints';
@@ -10,7 +11,8 @@ class Challenge extends Component {
     runnable: false,
     running: false,
     address: null,
-    challengeID: null
+    challengeID: null,
+    loading: false
   } 
 
   constructor(props) {
@@ -29,6 +31,7 @@ class Challenge extends Component {
 
   spawnChallenge = async () => {
     console.log((this.state.challengeID).toString());
+    this.setState({loading: true});
     try {
       const response = await axios.post(TUPRWARE_ENDPOINT + '/spawn-challenge', {
         challenge_id: (this.state.challengeID).toString()
@@ -47,9 +50,11 @@ class Challenge extends Component {
       alert(err.request.response);
       console.log(err.request.response);
     }
+    this.setState({loading: false});
   }
 
   stopChallenge = async () => {
+    this.setState({loading: true});
     try {
       await axios.post(TUPRWARE_ENDPOINT + '/stop-challenge', null, {
         headers: {
@@ -64,9 +69,11 @@ class Challenge extends Component {
       alert(err.request.response);
       console.log(err.request.response);
     }
+    this.setState({loading: false});
   }
 
   restartChallenge = async () => {
+    this.setState({loading: true});
     try {
       const response = await axios.post(TUPRWARE_ENDPOINT + '/restart-challenge', null, {
         headers: {
@@ -81,6 +88,7 @@ class Challenge extends Component {
       alert(err.request.response);
       console.log(err.request.response);
     }
+    this.setState({loading: false});
   }
 
   render() { 
@@ -106,6 +114,15 @@ class Challenge extends Component {
 
               {this.state.running ? <Button onClick={this.restartChallenge}>Restart</Button> : null}
             </div>
+
+            <ThreeDots 
+              height="71" 
+              width="71" 
+              color="#4fa94d" 
+              ariaLabel="three-dots-loading"
+              visible={this.state.loading}
+            />
+
             <Card.Link href={this.state.address} target="_blank">{this.state.address}</Card.Link>
 
             {/*<Card.Link href="#">Download required files</Card.Link>
