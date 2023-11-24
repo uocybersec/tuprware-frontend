@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import axios from 'axios';
+import { TUPRWARE_ENDPOINT } from '../utils/endpoints';
 
 class DiscordCallback extends Component {
   state = {}
 
   async componentDidMount() {
     const discordTmpCode = new URLSearchParams(window.location.search).get('code');
-    const response = await axios.post('https://ctf.uocybersec.com/login', {
+    const response = await axios.post(TUPRWARE_ENDPOINT + '/login', {
       code: discordTmpCode
     });
     

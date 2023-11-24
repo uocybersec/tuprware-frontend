@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import Challenge from './challenge';
 import Login from './login';
+import { getCookie } from '../utils/cookies';
+import { TUPRWARE_ENDPOINT } from '../utils/endpoints';
 import '../styles/home.css';
 
 class Home extends Component {
@@ -8,54 +11,49 @@ class Home extends Component {
     challenges: []
   }
 
-  componentDidMount() {
-    // send request to get challenges .....
-    let retrievedChallenges = [ // test data
-      {
-        name: "PWN me!",
-        id: 1,
-        points: 500,
-        category: "crypto",
-        description: "I wanna be PWNED!!",
-        running: false,
-        runnable: true
-      },
-      {
-        name: "SQL fun",
-        id: 2,
-        points: 400,
-        category: "web",
-        description: "SQL is the greatest thing ever.",
-        running: false,
-        runnable: false
-      }
-    ];
+  async componentDidMount() {
+    try {
+      const response = await axios.post(TUPRWARE_ENDPOINT + '/get-challenges', null, {
+        headers: {
+          'Authorization': `Bearer ${getCookie('token')}`
+        }
+      });
 
-    let challengeComponents = [];
-    let key = 0;
+      let challengeComponents = [];
+      let key = 0;
 
-    retrievedChallenges.forEach(challenge => {
-      challengeComponents.push(<Challenge
-                                key={key} 
-                                challengeID={challenge.id}
-                                name={challenge.name}
-                                points={challenge.points}
-                                category={challenge.category}
-                                description={challenge.description}
-                                running={challenge.running}
-                                runnable={challenge.runnable}
-                              />);
-      key++;
-    });
+      response.data.forEach(challenge => {
+        challengeComponents.push(
+          <Challenge
+            key={key} 
+            challengeID={challenge.id}
+            name={challenge.name}
+            points={challenge.points}
+            category={challenge.category}
+            description={challenge.description}
+            running={challenge.running}
+            runnable={challenge.runnable}
+            instance_port={challenge.instance_port}
+          />
+        );
+        key++;
+      });
 
-    this.setState({challenges: challengeComponents});
+      this.setState({challenges: challengeComponents});
+    }
+    catch (err) {
+      alert('Please sign in with your Discord to access the challenges!');
+      console.log(err);
+    }
   }
    
   render() { 
     return (
       <React.Fragment>
-        <Login /><br></br>
-        {this.state.challenges}
+        {getCookie('token') ? null : <React.Fragment><Login /><br></br></React.Fragment>}
+        <div style={{display: 'flex'}}>
+          {this.state.challenges}
+        </div>
       </React.Fragment>
     );
   }

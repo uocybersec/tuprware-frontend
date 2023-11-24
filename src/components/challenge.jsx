@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import axios from 'axios';
 import '../styles/challenge.css';
+import {getCookie} from '../utils/cookies';
+import {TUPRWARE_ENDPOINT, CHALLENGES_ENDPOINT} from '../utils/endpoints';
 
 class Challenge extends Component {
   state = {
@@ -14,36 +16,32 @@ class Challenge extends Component {
   constructor(props) {
     super(props);
 
-    const {running, runnable, challengeID} = props;
+    const {running, runnable, challengeID, instance_port} = props;
     this.state.running = running;
     this.state.runnable = runnable;
     this.state.challengeID = challengeID;
+    this.state.address = instance_port ? CHALLENGES_ENDPOINT + ':' + instance_port : null
 
     this.spawnChallenge = this.spawnChallenge.bind(this);
     this.stopChallenge = this.stopChallenge.bind(this);
     this.restartChallenge = this.restartChallenge.bind(this);
   }
 
-  getCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-  }
-
   spawnChallenge = async () => {
     console.log((this.state.challengeID).toString());
     try {
-      const response = await axios.post('https://ctf.uocybersec.com/spawn-challenge', {
+      const response = await axios.post(TUPRWARE_ENDPOINT + '/spawn-challenge', {
         challenge_id: (this.state.challengeID).toString()
       }, {
         headers: {
-          'Authorization': `Bearer ${this.getCookie('token')}`
+          'Authorization': `Bearer ${getCookie('token')}`
         }
       });
 
-      const challengeAddress = 'https://' + response.data['instance_port'] + '.uocybersec.com';
+      const challengeAddress = CHALLENGES_ENDPOINT + ':' + response.data['instance_port'];
       this.setState({address: challengeAddress});
       this.setState({running: true}); 
+      window.location.reload();
     }
     catch (err) {
       alert(err.request.response);
@@ -53,9 +51,9 @@ class Challenge extends Component {
 
   stopChallenge = async () => {
     try {
-      await axios.post('https://ctf.uocybersec.com/stop-challenge', null, {
+      await axios.post(TUPRWARE_ENDPOINT + '/stop-challenge', null, {
         headers: {
-          'Authorization': `Bearer ${this.getCookie('token')}`
+          'Authorization': `Bearer ${getCookie('token')}`
         }
       });
 
@@ -70,13 +68,13 @@ class Challenge extends Component {
 
   restartChallenge = async () => {
     try {
-      const response = await axios.post('https://ctf.uocybersec.com/restart-challenge', null, {
+      const response = await axios.post(TUPRWARE_ENDPOINT + '/restart-challenge', null, {
         headers: {
-          'Authorization': `Bearer ${this.getCookie('token')}`
+          'Authorization': `Bearer ${getCookie('token')}`
         }
       });
 
-      const challengeAddress = 'https://' + response.data['instance_port'] + '.uocybersec.com';
+      const challengeAddress = CHALLENGES_ENDPOINT + ':' + response.data['instance_port'];
       this.setState({address: challengeAddress});
     }
     catch (err) {
