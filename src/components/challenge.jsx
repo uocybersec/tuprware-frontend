@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
-import '../styles/challenge.css';
 import {getCookie} from '../utils/cookies';
 import {TUPRWARE_ENDPOINT, CHALLENGES_ENDPOINT} from '../utils/endpoints';
+import '../styles/challenge.css';
 
 class Challenge extends Component {
   state = {
