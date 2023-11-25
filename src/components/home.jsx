@@ -15,7 +15,7 @@ class Home extends Component {
     try {
       const response = await axios.post(TUPRWARE_ENDPOINT + '/get-challenges', null, {
         headers: {
-          'Authorization': `Bearer ${getCookie('token')}`
+          'Authorization': `Bearer ${getCookie('uoctfjwt')}`
         }
       });
 
@@ -51,7 +51,7 @@ class Home extends Component {
     return (
       <React.Fragment>
         <h1>uOCTF Portal</h1>
-        {getCookie('token') ? null : <React.Fragment><Login /><br></br></React.Fragment>}
+        {getCookie('uoctfjwt') ? null : <React.Fragment><Login /><br></br></React.Fragment>}
         <div style={{display: 'flex'}}>
           {this.state.challenges}
         </div>

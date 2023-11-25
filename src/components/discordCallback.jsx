@@ -12,7 +12,7 @@ class DiscordCallback extends Component {
     });
     
     if (response.status === 200) {
-      document.cookie = `token=${response.data}`;
+      document.cookie = `uoctfjwt=${response.data}`;
       window.location = '/';
     } else {
       alert('Something went wrong...');

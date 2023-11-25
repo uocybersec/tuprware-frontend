@@ -37,7 +37,7 @@ class Challenge extends Component {
         challenge_id: (this.state.challengeID).toString()
       }, {
         headers: {
-          'Authorization': `Bearer ${getCookie('token')}`
+          'Authorization': `Bearer ${getCookie('uoctfjwt')}`
         }
       });
 
@@ -58,7 +58,7 @@ class Challenge extends Component {
     try {
       await axios.post(TUPRWARE_ENDPOINT + '/stop-challenge', null, {
         headers: {
-          'Authorization': `Bearer ${getCookie('token')}`
+          'Authorization': `Bearer ${getCookie('uoctfjwt')}`
         }
       });
 
@@ -77,7 +77,7 @@ class Challenge extends Component {
     try {
       const response = await axios.post(TUPRWARE_ENDPOINT + '/restart-challenge', null, {
         headers: {
-          'Authorization': `Bearer ${getCookie('token')}`
+          'Authorization': `Bearer ${getCookie('uoctfjwt')}`
         }
       });
 
