@@ -52,7 +52,7 @@ class Home extends Component {
       <React.Fragment>
         <h1>uOCTF Portal</h1>
         {getCookie('uoctfjwt') ? null : <React.Fragment><Login /><br></br></React.Fragment>}
-        <div style={{display: 'flex'}}>
+        <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {this.state.challenges}
         </div>
       </React.Fragment>
