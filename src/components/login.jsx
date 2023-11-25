@@ -6,7 +6,7 @@ class Login extends Component {
 
 
   login = () => {
-    const oauthUrl = "https://discord.com/api/oauth2/authorize?client_id=1176559679669801040&redirect_uri=http%3A%2F%2F174.94.4.145%3A8081%2Fcallback&response_type=code&scope=identify";
+    const oauthUrl = "https://discord.com/api/oauth2/authorize?client_id=1176559679669801040&redirect_uri=https%3A%2F%2F10.70.10.5:81%2Fcallback&response_type=code&scope=identify";
     window.location = oauthUrl;
   }
 
